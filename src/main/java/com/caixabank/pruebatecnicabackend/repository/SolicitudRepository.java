@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
-    public Solicitud findBySolicitanteIdAndDivisa(String solicitanteId, String divisa);
+    public Solicitud findBySolicitanteDniAndDivisaAndImporteSolicitado(String solicitanteId, String divisa, double importeSolicitado);
 }

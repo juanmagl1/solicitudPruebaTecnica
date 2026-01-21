@@ -1,0 +1,14 @@
+package com.caixabank.pruebatecnicabackend.exception;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+
+@EqualsAndHashCode(callSuper = true)
+@RequiredArgsConstructor
+@Data
+public class ApiException extends RuntimeException{
+    private final String code;
+    private final HttpStatus status;
+}
