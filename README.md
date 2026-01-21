@@ -14,7 +14,7 @@ Proyecto backend desarrollado con **Spring Boot 3** y **Java 17** como solución
 
 ##  1. Instrucciones para ejecutar el proyecto
 
-### 📋 Requisitos
+###  Requisitos
 
 - Java **17**
 - Maven **3.8+**
@@ -190,7 +190,7 @@ Se utiliza un **mapper manual** para desacoplar entidades del modelo de exposici
 
 ---
 
-## ⚙️ Decisiones técnicas
+##  Decisiones técnicas
 
 - Spring Boot 3 + Java 17
 - Base de datos H2 persistida en fichero
