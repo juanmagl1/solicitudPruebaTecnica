@@ -1,152 +1,222 @@
-1) Instrucciones para ejecutar el proyecto
-Requisitos
+# 🏦 caixabank-prueba-tecnica-backend
 
-Java 17
+Proyecto backend desarrollado con **Spring Boot 3** y **Java 17** como solución a la prueba técnica de CaixaBank.
 
-Maven 3.8+ (recomendado)
+---
 
-Arranque en local
+## 📚 Índice
+
+1. [Instrucciones para ejecutar el proyecto](#-1-instrucciones-para-ejecutar-el-proyecto)
+2. [Arquitectura y decisiones técnicas](#-2-arquitectura-y-decisiones-técnicas)
+3. [Mejoras o extensiones futuras](#-3-mejoras-o-extensiones-futuras)
+
+---
+
+## 🚀 1. Instrucciones para ejecutar el proyecto
+
+### 📋 Requisitos
+
+- Java **17**
+- Maven **3.8+**
+
+---
+
+### ▶️ Arranque en local
 
 Desde la raíz del proyecto:
 
+```bash
 mvn spring-boot:run
+```
 
+La aplicación se inicia en:
 
-La aplicación levanta en:
-
+```
 http://localhost:8080
+```
 
-Base de datos (H2 en fichero)
+---
 
-La configuración usa H2 persistida en disco, por lo que los datos se mantienen entre reinicios.
+## 🗄️ Base de datos
 
-H2 Console: http://localhost:8080/h2-console
+Se utiliza **H2 persistida en fichero**, por lo que los datos se mantienen entre reinicios.
 
-JDBC URL: jdbc:h2:file:./caixabank_db
+### H2 Console
 
-User: sa
+- URL: `http://localhost:8080/h2-console`
+- JDBC URL: `jdbc:h2:file:./caixabank_db`
+- Usuario: `sa`
+- Password: *(vacío)*
 
-Password: (vacío)
+El fichero físico se genera en:
 
-El fichero de BD queda en la raíz: ./caixabank_db.mv.db
+```
+./caixabank_db.mv.db
+```
 
-Nota: en application.yml se usa MODE=PostgreSQL para acercar el comportamiento de H2 a PostgreSQL.
+> En `application.yml` se configura `MODE=PostgreSQL` para simular el comportamiento de PostgreSQL.
 
-Endpoints disponibles (API)
+---
 
-Base path: /api/v1/solicitud
+## 🌐 Endpoints disponibles
 
-Crear solicitud
+**Base path:**
 
+```
+/api/v1/solicitud
+```
+
+---
+
+### ➕ Crear solicitud
+
+```
 POST /api/v1/solicitud/create
+```
 
-Body ejemplo:
-
+```json
 {
   "nombreSolicitante": "Juan Pérez",
   "importeSolicitado": 1500.50,
   "divisa": "EUR",
   "dni": "12345678A"
 }
+```
 
+---
 
-Listar todas
+### 📄 Listar todas las solicitudes
 
+```
 GET /api/v1/solicitud/all
+```
 
-Obtener por id
+---
 
+### 🔍 Obtener solicitud por ID
+
+```
 GET /api/v1/solicitud/id/{id}
+```
 
-Actualizar estado
+---
 
+### 🔄 Actualizar estado de solicitud
+
+```
 PATCH /api/v1/solicitud/update/id/{id}
+```
 
-Body ejemplo:
+```json
+{
+  "nuevoEstado": "APROBADA"
+}
+```
 
-{ "nuevoEstado": "APROBADA" }
+---
+
+## 📌 Estados soportados
+
+- `PENDIENTE`
+- `APROBADA`
+- `RECHAZADA`
+- `CANCELADA`
+
+---
+
+## 🔁 Transiciones permitidas
+
+| Estado actual | Estados permitidos |
+|--------------|-------------------|
+| PENDIENTE    | APROBADA, RECHAZADA |
+| APROBADA     | CANCELADA |
+
+Cualquier transición no contemplada es rechazada por la lógica de negocio.
+
+---
+
+## 🏗️ 2. Arquitectura y decisiones técnicas
+
+### Arquitectura por capas
+
+#### Controller
+
+- Exposición de endpoints REST.
+- Validación de requests con `@Valid`.
+
+#### Service
+
+- Lógica de negocio.
+- Control de duplicados en estado `PENDIENTE`.
+- Creación automática del solicitante si no existe.
+- Máquina de estados para control de transiciones.
+
+#### Repository
+
+- Spring Data JPA.
+- Métodos derivados de búsqueda.
+
+---
+
+### Modelo de datos
+
+Relación entre entidades:
+
+```
+Solicitud  → @ManyToOne → Solicitante
+Solicitante → @OneToMany → Solicitud
+```
+
+---
+
+### DTO y Mapper
+
+**DTOs utilizados:**
+
+- `SolicitudRequest`
+- `UpdateEstadoSolicitudRequest`
+- `SolicitudResponse`
+
+Se utiliza un **mapper manual** para desacoplar entidades del modelo de exposición.
+
+---
+
+### Gestión de errores
+
+- Excepción de dominio: `ApiException`
+- `GlobalExceptionHandler`:
+  - `ApiError` para errores de negocio.
+  - `ProblemDetail` para errores de validación.
+
+---
+
+## ⚙️ Decisiones técnicas
+
+- Spring Boot 3 + Java 17
+- Base de datos H2 persistida en fichero
+- Bean Validation
+- Máquina de estados implementada en `enum`
+- JPA con `ddl-auto:update`
+
+---
+
+## 🚧 3. Mejoras o extensiones futuras
+
+### Funcionales
+
+- Búsqueda y filtrado por DNI, estado, divisa o fechas.
+- Paginación y ordenación.
+- Cancelación controlada de solicitudes.
+- Control de duplicados mediante restricción única en base de datos.
+
+---
+
+### Técnicas / Arquitecturales
+
+- Documentación con Swagger / OpenAPI.
+- Seguridad con Spring Security.
+- Validaciones de formato (DNI, divisa ISO).
+
+---
 
 
-Estados soportados: PENDIENTE, APROBADA, RECHAZADA, CANCELADA.
-
-Transiciones permitidas (según EstadoSolicitud.transicionarA):
-
-PENDIENTE -> APROBADA | RECHAZADA
-
-APROBADA -> CANCELADA
-
-2) Breve descripción de la arquitectura y decisiones técnicas
-Arquitectura (capas)
-
-Controller (SolicitudController)
-
-Expone endpoints REST.
-
-Usa @Valid para validar requests.
-
-Service (SolicitudService, SolicitanteService)
-
-Contiene la lógica de negocio:
-
-Evita duplicados “en proceso” comprobando si existe una solicitud del mismo DNI + divisa + importe en estado PENDIENTE.
-
-Crea Solicitante si no existe.
-
-Gestiona la máquina de estados y valida transiciones.
-
-Repository (Spring Data JPA)
-
-SolicitudRepository y SolicitanteRepository.
-
-Un método derivado para búsqueda: findBySolicitanteDniAndDivisaAndImporteSolicitado(...).
-
-Modelo (JPA Entities)
-
-Solicitud y Solicitante con relación:
-
-Solicitud -> @ManyToOne a Solicitante
-
-Solicitante -> @OneToMany a Solicitud
-
-DTO + Mapper
-
-DTOs para entrada/salida (SolicitudRequest, UpdateEstadoSolicitudRequest, SolicitudResponse)
-
-Mapper manual SolicitudResponseMapper para desacoplar entidad de respuesta.
-
-Gestión de errores
-
-Excepción de dominio ApiException con code y HttpStatus.
-
-GlobalExceptionHandler devuelve errores consistentes:
-
-ApiError para errores de negocio y JSON malformado/enum inválido.
-
-ProblemDetail para validaciones (MethodArgumentNotValidException) incluyendo un map con campos inválidos.
-
-Decisiones técnicas
-
-Spring Boot 3 + Java 17: stack moderno y estándar.
-
-H2 persistida a fichero: facilita ejecución local sin infraestructura.
-
-Validación con Bean Validation: asegura integridad de datos de entrada (campos obligatorios y importe > 0).
-
-Máquina de estados en un enum: encapsula reglas de transición (EstadoSolicitud) y simplifica el service.
-
-JPA con ddl-auto: update: útil para una prueba técnica (arranque rápido sin migraciones).
-
-3) Mejoras o extensiones con más tiempo (funcionales y técnicas/arquitecturales)
-
-Búsqueda y filtrado de solicitudes (por DNI, estado, rango de fechas, divisa…).
-
-Paginación y ordenación en el endpoint de listado (/all) para escalabilidad.
-
-Cancelación controlada: por ejemplo, permitir PENDIENTE -> CANCELADA si el enunciado lo contempla (ahora no está permitido).
-
-Evitar duplicados de forma robusta:
-
-Añadir una restricción única (o estrategia de idempotencia) para el caso “DNI+divisa+importe+estado=PENDIENTE”, y así soportar concurrencia real.
-
-
-Si aplica: autenticación/autorización (Spring Security), validaciones adicionales (formato DNI, divisa, etc.).
