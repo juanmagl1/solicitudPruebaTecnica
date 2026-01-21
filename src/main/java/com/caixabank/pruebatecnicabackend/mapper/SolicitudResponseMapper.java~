@@ -1,0 +1,12 @@
+package com.caixabank.pruebatecnicabackend.mapper;
+
+import com.caixabank.pruebatecnicabackend.dto.response.SolicitudResponse;
+import com.caixabank.pruebatecnicabackend.model.Solicitud;
+
+public class SolicitudResponseMapper {
+
+    public static SolicitudResponse toResponse(Solicitud solicitud){
+        SolicitudResponse response = new SolicitudResponse();
+        return response;
+    }
+}

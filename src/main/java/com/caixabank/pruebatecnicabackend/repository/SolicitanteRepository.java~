@@ -1,0 +1,8 @@
+package com.caixabank.pruebatecnicabackend.repository;
+
+import com.caixabank.pruebatecnicabackend.model.Solicitante;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface SolicitanteRepository implements BaseRepository<Solicitante, String> {
+}

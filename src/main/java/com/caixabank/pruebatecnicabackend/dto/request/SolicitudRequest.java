@@ -1,0 +1,21 @@
+package com.caixabank.pruebatecnicabackend.dto.request;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Data;
+
+import java.math.BigDecimal;
+
+@Data
+public class SolicitudRequest {
+    @NotBlank(message = "El nombre del solicitante es obligatorio")
+    private String nombreSolicitante;
+    @NotNull(message = "El importe solicitado es obligatorio")
+    @Positive(message = "El importe debe ser mayor que 0")
+    private BigDecimal importeSolicitado;
+    @NotBlank(message = "La divisa es obligatoria")
+    private String divisa;
+    @NotBlank(message = "El DNI del solicitante es obligatorio")
+    private String dni;
+}

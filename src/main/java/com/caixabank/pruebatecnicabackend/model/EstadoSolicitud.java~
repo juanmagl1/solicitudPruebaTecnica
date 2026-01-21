@@ -1,0 +1,8 @@
+package com.caixabank.pruebatecnicabackend.model;
+
+public enum EstadoSolicitud {
+    PENDIENTE,
+    APROBADA,
+    RECHAZADA,
+    CANCELADA
+}

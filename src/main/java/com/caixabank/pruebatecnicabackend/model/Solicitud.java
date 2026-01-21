@@ -3,7 +3,7 @@ package com.caixabank.pruebatecnicabackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity(name = "solicitud")
 @Table
@@ -17,7 +17,10 @@ public class Solicitud {
     @Column(name = "divisa")
     private String divisa;
     @Column(name = "fecha_creacion")
-    private Date fechaCreacion;
+    private LocalDateTime fechaCreacion;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_solicitud")
+    private EstadoSolicitud estadoSolicitud;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dni", referencedColumnName = "dni")
     private Solicitante solicitante;
