@@ -1,10 +1,10 @@
-# 🏦 caixabank-prueba-tecnica-backend
+# solicitud-api
 
 Proyecto backend desarrollado con **Spring Boot 3** y **Java 17** como solución a la prueba técnica de CaixaBank.
 
 ---
 
-## 📚 Índice
+##  Índice
 
 1. [Instrucciones para ejecutar el proyecto](#-1-instrucciones-para-ejecutar-el-proyecto)
 2. [Arquitectura y decisiones técnicas](#-2-arquitectura-y-decisiones-técnicas)
@@ -12,7 +12,7 @@ Proyecto backend desarrollado con **Spring Boot 3** y **Java 17** como solución
 
 ---
 
-## 🚀 1. Instrucciones para ejecutar el proyecto
+##  1. Instrucciones para ejecutar el proyecto
 
 ### 📋 Requisitos
 
@@ -21,7 +21,7 @@ Proyecto backend desarrollado con **Spring Boot 3** y **Java 17** como solución
 
 ---
 
-### ▶️ Arranque en local
+###  Arranque en local
 
 Desde la raíz del proyecto:
 
@@ -37,7 +37,7 @@ http://localhost:8080
 
 ---
 
-## 🗄️ Base de datos
+##  Base de datos
 
 Se utiliza **H2 persistida en fichero**, por lo que los datos se mantienen entre reinicios.
 
@@ -58,7 +58,7 @@ El fichero físico se genera en:
 
 ---
 
-## 🌐 Endpoints disponibles
+##  Endpoints disponibles
 
 **Base path:**
 
@@ -68,7 +68,7 @@ El fichero físico se genera en:
 
 ---
 
-### ➕ Crear solicitud
+###  Crear solicitud
 
 ```
 POST /api/v1/solicitud/create
@@ -85,7 +85,7 @@ POST /api/v1/solicitud/create
 
 ---
 
-### 📄 Listar todas las solicitudes
+###  Listar todas las solicitudes
 
 ```
 GET /api/v1/solicitud/all
@@ -93,7 +93,7 @@ GET /api/v1/solicitud/all
 
 ---
 
-### 🔍 Obtener solicitud por ID
+###  Obtener solicitud por ID
 
 ```
 GET /api/v1/solicitud/id/{id}
@@ -101,7 +101,7 @@ GET /api/v1/solicitud/id/{id}
 
 ---
 
-### 🔄 Actualizar estado de solicitud
+###  Actualizar estado de solicitud
 
 ```
 PATCH /api/v1/solicitud/update/id/{id}
@@ -115,7 +115,7 @@ PATCH /api/v1/solicitud/update/id/{id}
 
 ---
 
-## 📌 Estados soportados
+##  Estados soportados
 
 - `PENDIENTE`
 - `APROBADA`
@@ -124,7 +124,7 @@ PATCH /api/v1/solicitud/update/id/{id}
 
 ---
 
-## 🔁 Transiciones permitidas
+##  Transiciones permitidas
 
 | Estado actual | Estados permitidos |
 |--------------|-------------------|
@@ -135,7 +135,7 @@ Cualquier transición no contemplada es rechazada por la lógica de negocio.
 
 ---
 
-## 🏗️ 2. Arquitectura y decisiones técnicas
+##  2. Arquitectura y decisiones técnicas
 
 ### Arquitectura por capas
 
@@ -200,7 +200,7 @@ Se utiliza un **mapper manual** para desacoplar entidades del modelo de exposici
 
 ---
 
-## 🚧 3. Mejoras o extensiones futuras
+##  3. Mejoras o extensiones futuras
 
 ### Funcionales
 
