@@ -1,0 +1,62 @@
+package com.caixabank.pruebatecnicabackend.service;
+
+import com.caixabank.pruebatecnicabackend.model.Solicitante;
+import com.caixabank.pruebatecnicabackend.repository.SolicitanteRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class SolicitanteServiceTest {
+    @Mock
+    private SolicitanteRepository solicitanteRepository;
+
+    @InjectMocks
+    private SolicitanteService solicitanteService;
+
+    @Test
+    void getSolicitanteById_whenExists_returnsEntity() {
+        Solicitante s = new Solicitante();
+        s.setDni("12345678A");
+        s.setNombre("Juan Pérez");
+
+        when(solicitanteRepository.findById("12345678A")).thenReturn(Optional.of(s));
+
+        Solicitante result = solicitanteService.getSolicitanteById("12345678A");
+
+        assertThat(result).isSameAs(s);
+        verify(solicitanteRepository).findById("12345678A");
+    }
+
+    @Test
+    void getSolicitanteById_whenNotExists_returnsNull() {
+        when(solicitanteRepository.findById("12345678A")).thenReturn(Optional.empty());
+
+        Solicitante result = solicitanteService.getSolicitanteById("12345678A");
+
+        assertThat(result).isNull();
+        verify(solicitanteRepository).findById("12345678A");
+    }
+
+
+    @Test
+    void saveSolicitante_delegatesToRepository() {
+        Solicitante s = new Solicitante();
+        s.setDni("12345678A");
+        s.setNombre("Juan Pérez");
+
+        when(solicitanteRepository.save(s)).thenReturn(s);
+
+        Solicitante result = solicitanteService.saveSolicitante(s);
+
+        assertThat(result).isSameAs(s);
+        verify(solicitanteRepository).save(s);
+    }
+}
